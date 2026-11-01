@@ -53,11 +53,24 @@ final class ModerationService implements Observer<Event> {
         this.reviews = reviews;
     }
     public void onEvent(Event event) {
-        Group group = groups.get(event.groupId());
-        if (group == null) throw new IllegalArgumentException("Unknown group: " + event.groupId());
-        List<Content> matches = group.accept(new FilterVisitor(rule));
-        String ids = matches.stream().map(Content::id).collect(java.util.stream.Collectors.joining(","));
-        reviews.publish(new Event(EventType.REVIEWED, group.id(), event.contentId(), ids, matches.size()));
+    Group group = groups.get(event.groupId());
+    if (group == null) {
+        throw new IllegalArgumentException("Unknown group: " + event.groupId());
+    }
+
+    List<Content> matches = group.accept(new FilterVisitor(
+            node -> node.id().equals(event.contentId()) && rule.test(node)));
+
+    String ids = matches.stream()
+            .map(Content::id)
+            .collect(java.util.stream.Collectors.joining(","));
+
+    reviews.publish(new Event(
+            EventType.REVIEWED,
+            group.id(),
+            event.contentId(),
+            ids,
+            matches.size()));
     }
 }
 

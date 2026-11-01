@@ -266,4 +266,29 @@ class SocialNetworkTest {
         assertEquals("{\"type\":\"video\",\"id\":\"v\",\"text\":\"Tutorial\",\"likes\":5}",
                 video.accept(new JsonVisitor()));
     }
+
+
+    @Test void reportDoesNotFlagAnotherItemInSameGroup() {
+        Group group = new Group("java", List.of(
+            new Post("p1", "Clean post", 0),
+            new Comment("c1", "spam link", 0)));
+
+        EventHub reviews = new EventHub();
+        ReviewLog log = new ReviewLog();
+        reviews.subscribe(EventType.REVIEWED, log);
+
+        ModerationService moderation = new ModerationService(
+            Map.of("java", group),
+            node -> node instanceof Comment comment
+                    && comment.text().contains("spam"),
+            reviews);
+
+        moderation.onEvent(new Event(
+                EventType.REPORTED, "java", "p1", "Review requested", 0));
+    
+        assertEquals(1, log.entries().size());
+        assertEquals("p1", log.entries().get(0).contentId());
+        assertEquals("", log.entries().get(0).message());
+        assertEquals(0, log.entries().get(0).value());
+}
 }
