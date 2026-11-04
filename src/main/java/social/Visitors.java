@@ -52,3 +52,26 @@ final class FilterVisitor implements Visitor<List<Content>> {
     public List<Content> visit(Image node) { return match(node); }
     public List<Content> visit(Video node) { return match(node); }
 }
+
+
+
+
+
+
+
+
+/*
+    int total = 0;
+        for (Content child : children) {
+            total += child.accept(this);
+        }
+        return total;
+    }
+
+    public Integer visit(Community community) {
+        return count(community.groups());
+    }
+
+    public Integer visit(Group group) {
+        return count(group.children());
+    }

@@ -51,6 +51,10 @@ public final class Main {
                 }
             });
         }
+
+        //ReportCounter reportCounter = new ReportCounter();
+        //postEvents.subscribe(EventType.REPORTED, reportCounter);
+
         new ProducerRunner(Executors.newFixedThreadPool(threads)).run(producers);
         posts.report("java", "c1");
 
@@ -61,6 +65,7 @@ public final class Main {
         System.out.println("Snapshot engagement: " + community.accept(new EngagementVisitor()));
         System.out.println("Snapshot nodes: " + community.accept(new StatisticsVisitor()));
         System.out.println("Review: " + reviewLog.entries());
+        System.out.println("Reports: " + )
         System.out.println(community.accept(new JsonVisitor()));
     }
 }

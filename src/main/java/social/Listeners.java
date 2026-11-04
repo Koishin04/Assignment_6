@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Predicate;
+import java.util.AtomicReference
 
 final class Feed implements Observer<Event> {
     private final ConcurrentLinkedQueue<Event> posts = new ConcurrentLinkedQueue<>();
@@ -74,8 +75,36 @@ final class ModerationService implements Observer<Event> {
     }
 }
 
+
+final class ReportCounter implements Observer<Event>{
+    private int 
+
+}
+//listener priritities higher prioruty notifited first equal prioroty keeps sibcrsaption order and atomicreferenace на неизменямый снимок
+
 final class ReviewLog implements Observer<Event> {
     private final ConcurrentLinkedQueue<Event> reviews = new ConcurrentLinkedQueue<>();
     public void onEvent(Event event) { reviews.add(event); }
     List<Event> entries() { return List.copyOf(reviews); }
+}
+
+
+
+
+
+/*
+final class ReportCounter implements Observer<Event> {
+    private int count;
+    @Override
+    public synchronized void onEvent(Event event) {
+        count++;
+    }
+    synchronized int count() {
+        return count;
+    }
+}
+*/
+
+
+
 }
